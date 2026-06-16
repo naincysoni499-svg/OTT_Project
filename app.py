@@ -1,23 +1,22 @@
 from flask import Flask, request
-import os
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "uploads"
-
 @app.route("/")
 def home():
-    return "My OTT Project"
+    return """
+    <h2>Upload a Video</h2>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit">Upload</button>
+    </form>
+    """
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
     file = request.files["file"]
-
-    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(filepath)
-
+    file.save("Uploads/" + file.filename)
     return f"{file.filename} uploaded successfully!"
 
 if __name__ == "__main__":
     app.run(debug=True)
-    
