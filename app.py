@@ -10,7 +10,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def home():
     return """
     <h1>OTT Video Upload Portal</h1>
-    <p>Media & Entertainment Internship Project</p>
+    <p>Supported formats: MP4, AVI, MOV</p>
 
     <form action="/upload" method="POST" enctype="multipart/form-data">
         <input type="file" name="file">
