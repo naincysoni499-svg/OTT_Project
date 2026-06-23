@@ -3,14 +3,19 @@ import subprocess
 video_file = "Uploads/sample.mp4"
 thumbnail_file = "thumbnail.jpg"
 
-print("Generating thumbnail...")
+print("Step 1: Starting thumbnail generation...")
 
-subprocess.run([
-    "ffmpeg",
-    "-i", video_file,
-    "-ss", "00:00:05",
-    "-frames:v", "1",
-    thumbnail_file
-])
+try:
+    subprocess.run([
+        "ffmpeg",
+        "-i", video_file,
+        "-ss", "00:00:05",
+        "-frames:v", "1",
+        thumbnail_file
+    ], check=True)
 
-print("Thumbnail generated successfully!")
+    print("Step 2: FFmpeg executed successfully")
+    print("Step 3: Thumbnail created at:", thumbnail_file)
+
+except subprocess.CalledProcessError:
+    print("Error: Thumbnail generation failed")
