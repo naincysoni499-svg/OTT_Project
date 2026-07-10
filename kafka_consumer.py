@@ -22,20 +22,22 @@ consumer = KafkaConsumer(
 print("Waiting for events...")
 
 for message in consumer:
-    event = message.value
+    try:
+        event = message.value
+        video_id = event["video_id"]
 
-    video_id = event["video_id"]
+        cursor.execute(
+            """
+            INSERT INTO video_views (video_id, total_views)
+            VALUES (%s, 1)
+            ON CONFLICT (video_id)
+            DO UPDATE SET total_views = video_views.total_views + 1;
+            """,
+            (video_id,)
+        )
 
-    cursor.execute(
-        """
-        INSERT INTO video_views (video_id, total_views)
-        VALUES (%s, 1)
-        ON CONFLICT (video_id)
-        DO UPDATE SET total_views = video_views.total_views + 1;
-        """,
-        (video_id,)
-    )
+        conn.commit()
+        print(f"Updated views for video {video_id}")
 
-    conn.commit()
-
-    print(f"Updated views for video {video_id}")
+    except Exception as e:
+        print(f"Error processing event: {e}")
